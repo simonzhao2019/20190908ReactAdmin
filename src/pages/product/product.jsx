@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import {Route,Redirect,Switch} from 'react-router-dom';
+//自己模块
 import ProductHome from './productHome'
 import ProductDetail from "./productDetail";
 import ProductAddUpdate from "./productAddUpdate";
+import "./common.less";
 
 export default class Product extends Component {
   render() {

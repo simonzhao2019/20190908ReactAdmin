@@ -1,4 +1,5 @@
 import storage from './storage'
 export default {
-  user: storage.getUser()
+  user: storage.getUser(),
+  product:{}
 }

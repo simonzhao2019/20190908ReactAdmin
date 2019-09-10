@@ -6,7 +6,7 @@ import {message} from 'antd'
 //使用interceptors.request拦截请求并且将数据格式转换为urlencoded
 axios.interceptors.request.use(
   (config)=>{
-    //config.baseURL = 'http://localhost:5000'
+    //config.baseURL = 'http://localhost:3000'
     let data=config.data
     if(data&&data instanceof Object){
       config.data = qs.stringify(data)

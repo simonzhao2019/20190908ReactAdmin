@@ -32,13 +32,13 @@ export const weatherReq=(city)=>{
 }
 //获取分类列表的函数
 export const reqCategorys=()=>ajax({
-   url: "manage/category/list",
+   url: "/manage/category/list",// 这里如果不加斜杠， 会自动把路由的上一层， 也就是product加入到地址中， 也就是说访问的地址就变成了 / product / manage / category / list                         
      method: "GET"
 })
 //添加分类
 
 export const reqAddCategory = (categoryName) => ajax({
-  url: "manage/category/add",
+  url: "/manage/category/add",
   method: "POST",
   data: {
     categoryName
@@ -54,13 +54,60 @@ export const reqUpdateCategory = ({
     categoryName
   }
 )
-//添加商品
-/* export const addUpdateCategory = ({
-  categoryId,
-  categoryName
-}) => ajax.post(
-  '/manage/product/add', {
-    categoryId,
-    categoryName
+//获取商品分页列表
+export const reqProducts=(pageNum,pageSize)=>
+  ajax.get(
+   "/manage/product/list",
+   {
+     params: {
+       pageNum,
+       pageSize
+     }
+   }
+  )
+//搜索商品
+export const reqSearchProducts = ({pageNum,pageSize,searchType,searchName}) => ajax.get(
+  "/manage/product/search",
+  {
+    params:{
+      pageNum,
+      pageSize,
+      [searchType]:searchName
+    }
   }
-) */
+)
+//商品的上架或者是下架处理
+export const reqUpdateStatus = (productId, status) => ajax.post(
+  '/manage/product/updateStatus', {
+    productId,
+    status
+  }
+)
+//根据商品ID获取商品详情
+export const reqProduct = (productId) => ajax({
+  url: "/manage/product/info",
+  params:{
+    productId
+  }
+})
+//根据分类ID获取分类
+export const reqCategory = (categoryId) => ajax({
+  url: "/manage/category/info",
+  params:{
+     categoryId
+  }
+})
+export const reqDeleteImg = (name) => ajax({
+  url: '/manage/img/delete',
+  method: 'POST',
+  data: {
+    name
+  }
+})
+/* export const reqCategory = (categoryId) => ajax({
+  url: '/manage/category/info',
+  params: {
+    categoryId
+  }
+}) */
+

@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import { Card, Button, Icon, Table, message, Modal } from "antd";
+//自己模块
 import LinkButton from "../../components/linkButton/linkButton";
 import { reqCategorys } from "../../api/index";
 import CategoryForm from './category-form';
 import { reqAddCategory } from '../../api/index'
 import { reqUpdateCategory } from "../../api/index";
+
 
 
 import "./category.less";
