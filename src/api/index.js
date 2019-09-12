@@ -104,6 +104,18 @@ export const reqDeleteImg = (name) => ajax({
     name
   }
 })
+
+//添加/更新商品的请求函数
+export const addOrUpdateProduct=(product)=>ajax({
+    url: "/manage/product/" + (product._id ? 'update' : 'add'),
+    method:"POST",
+   data: product
+}
+
+)
+
+
+
 /* export const reqCategory = (categoryId) => ajax({
   url: '/manage/category/info',
   params: {

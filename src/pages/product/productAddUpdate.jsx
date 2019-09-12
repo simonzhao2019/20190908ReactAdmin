@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { Card, Icon, Form, Input, Select, Button, message } from "antd";
 
 import LinkButton from '../../components/linkButton/linkButton';
-import { reqCategorys } from "../../api/index";
+import { reqCategorys, addOrUpdateProduct } from "../../api/index";
 import PictureWall from './pictureWall';
+import EditText from './editText';
 
 
 const {Item}=Form
@@ -15,6 +16,7 @@ class ProductAddUpdate extends Component {
   };
   //利用ref属性，获取PictureWall上面的图片名称数组
   pwRef = React.createRef();
+  editorRef=React.createRef()
   //添加，修改的分类请求
   getCategorys = async () => {
     const result = await reqCategorys();
@@ -30,11 +32,22 @@ class ProductAddUpdate extends Component {
     // 阻止事件的默认行为
     event.preventDefault();
 
-    this.props.form.validateFields((error, values) => {
+    this.props.form.validateFields(async (error, values) => {
       if (!error) {
          const { name, desc, price, categoryId } = values;
         const imgs = this.pwRef.current.getImgs();
-         console.log("imgs", imgs);
+       const detail = this.editorRef.current.submitContent()
+       const product = { name, desc, price, categoryId, imgs, detail }
+       if(this.props.location.state){
+         product._id = this.props.location.state._id;
+       }
+       const result = await addOrUpdateProduct(product);
+       if(result.status===0){
+          message.success('操作商品成功')
+         this.props.history.replace("/product")
+       }else{
+         message.error('操作商品失败')
+       }
       }
     });
   };
@@ -120,7 +133,9 @@ class ProductAddUpdate extends Component {
           <Item label="商品图片">
             <PictureWall ref={this.pwRef} imgs={product.imgs}></PictureWall>
           </Item>
-          <Item label="商品详情">商品详情</Item>
+          <Item label="商品详情" wrapperCol={{ span: 18 }}>
+            <EditText detail={product.detail} ref={this.editorRef} />
+          </Item>
           <Item>
             <Button type="primary" htmlType="submit">
               提交

@@ -184,7 +184,7 @@ export default class ProductHome extends Component {
             pageSize: 4,
             total,
             onChange: this.getProducts,
-            current: 3
+            current: this.current
           }}
         ></Table>
       </Card>
