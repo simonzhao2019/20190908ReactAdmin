@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import {withRouter} from 'react-router-dom'
-import { Modal, Button } from "antd";
+import { Modal} from "antd";
 //自己定义的模块
 import './header.less'
 import LinkButton from '../../components/linkButton/linkButton'

@@ -111,11 +111,20 @@ export const addOrUpdateProduct=(product)=>ajax({
     method:"POST",
    data: product
 }
-
 )
+//获取所有角色列表
+export const reqRoles=()=>ajax({
+  url: "/manage/role/list"
+})
 
-
-
+//添加角色
+export const reqAddRole=(roleName)=>ajax({
+  url: "/manage/role/add",
+  method:"POST",
+  data:{
+    roleName
+  }
+})
 /* export const reqCategory = (categoryId) => ajax({
   url: '/manage/category/info',
   params: {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Redirect ,Switch,Route} from 'react-router-dom'
-import { Layout, Menu } from "antd";
+import { Layout } from "antd";
 //自己模块||组件
 import memoryUtils from "../../utils/memoryUtils"
 import LeftMenu from '../../components/leftMenu/index'
