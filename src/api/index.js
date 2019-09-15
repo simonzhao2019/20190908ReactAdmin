@@ -125,6 +125,16 @@ export const reqAddRole=(roleName)=>ajax({
     roleName
   }
 })
+
+//更新角色权限
+export const reqUpdateRole = (role) => ajax.post('/manage/role/update', role)
+// 获取所有用户的列表
+export const reqUsers = () => ajax('/manage/user/list')
+export const reqDeleteUser = (userId) => ajax.post('/manage/user/delete', {
+  userId
+})
+// 添加/更新用户
+export const reqAddOrUpdateUser = (user) => ajax.post('/manage/user/' + (user._id ? 'update' : 'add'), user)
 /* export const reqCategory = (categoryId) => ajax({
   url: '/manage/category/info',
   params: {

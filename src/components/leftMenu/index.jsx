@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link ,withRouter} from "react-router-dom";
 import { Menu, Icon } from "antd";
+import memoryUtils from '../../utils/memoryUtils';
 import menuList from "../../config/menuConfig";
 import "./index.less";
 import logo from "../../assets/images/logo.png";
@@ -50,9 +51,21 @@ const { SubMenu } = Menu;
   //    }, []);
   //  };
    //遍历数据，动态生成菜单
+   hasAuth=(item)=>{
+const user = memoryUtils.user;
+const menus = user.role.menus;
+if (user.username==='admin' || item.isPublic || menus.indexOf(item.key)!==-1) {
+      return true
+    } else if (item.children) {
+      return item.children.some(cItem => menus.indexOf(cItem.key)!==-1)
+    }
+    return false
+  
+   }
    getMenu = menuList => {
      const path = this.props.location.pathname
      return menuList.map(item=>{
+       if(this.hasAuth(item)){
        if(!item.children){
          return (
            <Menu.Item key={item.key}>
@@ -80,6 +93,7 @@ const { SubMenu } = Menu;
            </SubMenu>
          );
        }
+      }
 
      })
    }

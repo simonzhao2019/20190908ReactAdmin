@@ -3,7 +3,8 @@ import { Card, Button, Table, Modal, message } from "antd";
 //自己模块
 import { formateDate } from "../../utils/dateUtils";
 import LinkButton from "../../components/linkButton/linkButton";
-import { reqRoles, reqAddRole } from "../../api/index";
+import { reqRoles, reqAddRole, reqUpdateRole } from "../../api/index";
+import memoryUtils from "../../utils/memoryUtils";
 import RoleAdd from "./roleAdd";
 import RoleAuth from './roleAuth';
 
@@ -13,6 +14,7 @@ export default class Roles extends Component {
     showOrHiddenAdd: false,
     showOrHiddenAuth: false
   };
+  authRef=React.createRef()
   initColumn = () => {
     this.columns = [
       {
@@ -41,7 +43,23 @@ export default class Roles extends Component {
       }
     ];
   };
+//更新角色权限
+updateRole=async ()=>{
+   this.setState({
+     showOrHiddenAuth: false
+   });
+   const role=this.role
+   console.log(role)
+  role.menus = this.authRef.current.getMenus();
+   role.auth_time=Date.now()
+   role.auth_name = memoryUtils.user.username
+    const result = await reqUpdateRole(role)
+    if (result.status===0) {
+      message.success(`给${role.name}授权成功`)
+      this.getRoles()
+    }
 
+}
   //显示角色授权界面
   showAuth = role => {
     this.role = role;
@@ -88,8 +106,8 @@ export default class Roles extends Component {
     this.initColumn()
   }
   render() {
-    const roles = this.state.roles || [];
-    const { showOrHiddenAdd, showOrHiddenAuth } = this.state;
+    const { roles,showOrHiddenAdd, showOrHiddenAuth } = this.state;
+    const role = this.role || {};
     const title = (
       <Button
         type="primary"
@@ -124,12 +142,12 @@ export default class Roles extends Component {
           <Modal
             title="设置角色权限"
             visible={showOrHiddenAuth}
+            onOk={this.updateRole}
             onCancel={() => {
-              this.setState({ showOrHiddenAuth: false });
-              
+            this.setState({ showOrHiddenAuth: false });
             }}
           >
-            <RoleAuth role={this.role}></RoleAuth>
+            <RoleAuth ref={this.authRef} role={role}></RoleAuth>
           </Modal>
         </Card>
       </>
