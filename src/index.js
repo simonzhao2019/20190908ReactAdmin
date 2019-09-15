@@ -1,8 +1,15 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import store from './redux/store';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import App from './App'
+//初始化渲染
+ReactDOM.render( < App store = {
+      store
+    }
+    />, document.getElementById('root'))
+//store的数据发生改变的时候调用，重新渲染
+store.subscribe(()=>{
+  ReactDOM.render( <App store = {store}/> , document.getElementById('root'))
+})
 
-serviceWorker.unregister();
