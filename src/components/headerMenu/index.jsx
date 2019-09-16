@@ -1,11 +1,12 @@
 import React, { Component } from "react"
 import {withRouter} from 'react-router-dom'
 import { Modal} from "antd";
+import {connect} from 'react-redux';
 //自己定义的模块
 import './header.less'
 import LinkButton from '../../components/linkButton/linkButton'
 import memoryUtils from '../../utils/memoryUtils'
-import menuList from "../../config/menuConfig"
+//import menuList from "../../config/menuConfig"
 import { formateDate } from "../../utils/dateUtils"
 import { weatherReq } from "../../api/index";
 import storage from "../../utils/storage";
@@ -51,7 +52,8 @@ const {confirm}=Modal
        });
      }, 1000);
    };
-   getTitle = () => {
+   //根据路径获取头部信息
+  /*  getTitle = () => {
      const path = this.props.location.pathname;
      let title;
      menuList.forEach(item => {
@@ -65,7 +67,7 @@ const {confirm}=Modal
        }
      });
      return title;
-   };
+   }; */
    componentDidMount() {
      this.updateTime();
      this.getWeather();
@@ -76,7 +78,7 @@ const {confirm}=Modal
    render() {
      const { username } = memoryUtils.user;
      const { currentTime, dayPictureUrl, weather } = this.state;
-     const title = this.getTitle();
+     const title = this.props.headerTitle;
      return (
        <div className="header">
          <div className="header-top">
@@ -95,5 +97,7 @@ const {confirm}=Modal
      );
    }
  }
-export default withRouter(HeadMenu)
+export default withRouter(connect(
+  state=>({headerTitle:state.headerTitle})
+)(HeadMenu));
 

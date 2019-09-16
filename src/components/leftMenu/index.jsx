@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import { Link ,withRouter} from "react-router-dom";
 import { Menu, Icon } from "antd";
+import {connect} from 'react-redux';
+
 import memoryUtils from '../../utils/memoryUtils';
 import menuList from "../../config/menuConfig";
 import "./index.less";
 import logo from "../../assets/images/logo.png";
+import { setHeaderTitle } from "../../redux/action";
 
 const { SubMenu } = Menu;
 
@@ -62,14 +65,20 @@ if (user.username==='admin' || item.isPublic || menus.indexOf(item.key)!==-1) {
     return false
   
    }
+    
    getMenu = menuList => {
-     const path = this.props.location.pathname
+    const path = this.props.location.pathname;
      return menuList.map(item=>{
        if(this.hasAuth(item)){
        if(!item.children){
+          if (path.indexOf(item.key) === 0) {
+            this.props.setHeaderTitle(item.title);
+          }
          return (
+           
            <Menu.Item key={item.key}>
-             <Link to={item.key}>
+         {/* 改变action里面data的值，从而改变数据 */}
+             <Link to={item.key} onClick={()=>this.props.setHeaderTitle(item.title)}>
                <Icon type={item.icon} />
                <span>{item.title}</span>
              </Link>
@@ -123,4 +132,7 @@ if (user.username==='admin' || item.isPublic || menus.indexOf(item.key)!==-1) {
      );
    }
  }
-export default withRouter(LeftMenu)
+export default withRouter(connect(
+  state=>({}),
+  {setHeaderTitle}
+)(LeftMenu));
