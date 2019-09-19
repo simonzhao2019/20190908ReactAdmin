@@ -1,5 +1,7 @@
 import {combineReducers} from 'redux';
-import {SET_HEADER_TITLE} from './action_type';
+import storage from '../utils/storage';
+import { SET_HEADER_TITLE, RECEIVE_USER, SHOW_MSG,LOGOUT } from '../redux/action_type';
+
 
 
 
@@ -18,10 +20,15 @@ function headerTitle(state = initHeaderTitle, action) {
 /* 
 管理登陆用户信息状态数据的reduer函数
 */
-const initUser = {}
+const initUser = storage.getUser()
 function user(state = initUser, action) {
   switch (action.type) {
-    
+    case RECEIVE_USER:
+      return  action.user
+    case SHOW_MSG:
+      return { ...state, msg: action.msg }
+    case LOGOUT:
+      return { msg: '请重新登陆' }
     default:
       return state
   }

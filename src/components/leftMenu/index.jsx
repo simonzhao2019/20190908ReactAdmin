@@ -55,7 +55,7 @@ const { SubMenu } = Menu;
   //  };
    //遍历数据，动态生成菜单
    hasAuth=(item)=>{
-const user = memoryUtils.user;
+const user = this.props.user
 const menus = user.role.menus;
 if (user.username==='admin' || item.isPublic || menus.indexOf(item.key)!==-1) {
       return true
@@ -133,6 +133,8 @@ if (user.username==='admin' || item.isPublic || menus.indexOf(item.key)!==-1) {
    }
  }
 export default withRouter(connect(
-  state=>({}),
+  state=>({
+    user:state.user
+  }),
   {setHeaderTitle}
 )(LeftMenu));

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Redirect ,Switch,Route} from 'react-router-dom'
 import { Layout } from "antd";
+import {connect} from 'react-redux';
 //自己模块||组件
 import memoryUtils from "../../utils/memoryUtils"
 import LeftMenu from '../../components/leftMenu/index'
@@ -14,6 +15,7 @@ import Bar from "../charts/bar";
 import Line from "../charts/line";
 import Pie from "../charts/pie";
 
+import NotFound from "../not-found/not-found";
 import  './admin.less'
 
 //从模块中取出某个具体组件
@@ -21,21 +23,22 @@ import  './admin.less'
 由于第一次渲染已经生成了LeftMenu组件，因此第二次会复用。defaultKey不会改变 */
 const {  Footer, Content,Sider } = Layout
 
-export default class Admin extends Component {
+class Admin extends Component {
   render() {
-    const userData = memoryUtils.user;
+    const userData = this.props.user;
     if (!userData._id) {
       return <Redirect to="/login"></Redirect>;
     }
     return (
       <Layout style={{ height: "100%" }}>
         <Sider className="LeftSide">
-          <LeftMenu></LeftMenu> 
+          <LeftMenu></LeftMenu>
         </Sider>
         <Layout>
           <HeaderMenu>Header</HeaderMenu>
           <Content style={{ backgroundColor: "white", margin: "20px 20px 0" }}>
             <Switch>
+              <Redirect from="/" to="/home" exact />
               <Route path="/home" component={Home}></Route>
               <Route path="/category" component={Category}></Route>
               <Route path="/product" component={Product}></Route>
@@ -44,7 +47,7 @@ export default class Admin extends Component {
               <Route path="/charts/bar" component={Bar}></Route>
               <Route path="/charts/line" component={Line}></Route>
               <Route path="/charts/pie" component={Pie}></Route>
-              <Redirect to="/home" />
+              <Route component={NotFound} />
             </Switch>
           </Content>
           <Footer style={{ textAlign: "center", color: "rgba(0, 0, 0, 0.5)" }}>
@@ -55,3 +58,8 @@ export default class Admin extends Component {
     );
   }
 }
+export default connect(
+  state=>({
+    user:state.user
+  })
+)(Admin);

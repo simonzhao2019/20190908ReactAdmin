@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Card, Button, Table, Modal, message } from "antd";
+import {connect} from 'react-redux';
 //自己模块
 import { formateDate } from "../../utils/dateUtils";
 import LinkButton from "../../components/linkButton/linkButton";
@@ -8,7 +9,7 @@ import memoryUtils from "../../utils/memoryUtils";
 import RoleAdd from "./roleAdd";
 import RoleAuth from './roleAuth';
 
-export default class Roles extends Component {
+class Roles extends Component {
   state = {
     roles: [], //后台获取的角色存放在这里
     showOrHiddenAdd: false,
@@ -52,7 +53,7 @@ updateRole=async ()=>{
    console.log(role)
   role.menus = this.authRef.current.getMenus();
    role.auth_time=Date.now()
-   role.auth_name = memoryUtils.user.username
+   role.auth_name = this.props.user.username
     const result = await reqUpdateRole(role)
     if (result.status===0) {
       message.success(`给${role.name}授权成功`)
@@ -154,3 +155,9 @@ updateRole=async ()=>{
     );
   }
 }
+export default connect(
+  state => ({
+    user: state.user
+  }),
+  {}
+)(Roles);

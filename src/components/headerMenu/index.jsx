@@ -9,7 +9,8 @@ import memoryUtils from '../../utils/memoryUtils'
 //import menuList from "../../config/menuConfig"
 import { formateDate } from "../../utils/dateUtils"
 import { weatherReq } from "../../api/index";
-import storage from "../../utils/storage";
+import storage from "../../utils/storage"
+import { logout } from "../../redux/action";
 
 const {confirm}=Modal
 
@@ -25,12 +26,13 @@ const {confirm}=Modal
          title: "退出",
          content: "你确定要退出登录吗？",
          onOk:()=> {
-           storage.deleteUser()
+           /* storage.deleteUser()
            memoryUtils.user={}
-           this.props.history.replace("/login")
+           this.props.history.replace("/login") */
+            this.props.logout();
          },
          onCancel:()=> {
-           console.log("Cancel");
+  
          }
        });
      
@@ -76,7 +78,7 @@ const {confirm}=Modal
      clearInterval(this.intervalId);
    }
    render() {
-     const { username } = memoryUtils.user;
+     const { username } = this.props.user
      const { currentTime, dayPictureUrl, weather } = this.state;
      const title = this.props.headerTitle;
      return (
@@ -97,7 +99,13 @@ const {confirm}=Modal
      );
    }
  }
-export default withRouter(connect(
-  state=>({headerTitle:state.headerTitle})
-)(HeadMenu));
+export default withRouter(
+  connect(
+    state => ({
+      headerTitle: state.headerTitle,
+      user: state.user
+    }),
+    { logout }
+  )(HeadMenu)
+);
 

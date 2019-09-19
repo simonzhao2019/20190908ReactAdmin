@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
+import {connect} from 'react-redux';
 import { Form, Icon, Input, Button, message } from "antd";
 //自己内部模块的引入
 import {loginReq} from '../../api';
 import memoryUtils from "../../utils/memoryUtils";
-import storage from '../../utils/storage'
+import storage from "../../utils/storage";
+import {login} from '../../redux/action';
 //样式的引入
 import "./login.less";
 import logo from "../../assets/images/logo.png";
@@ -29,24 +31,18 @@ class Login extends Component {
   handleSubmit = e => {
     e.preventDefault();
     const form = this.props.form
-    form.validateFields(async (errors, { username, password }) => {
-      if (!errors) {
-        const result = await loginReq(username, password)
-        if(result.status===0){
-          const userData=result.data
-          storage.saveUser(userData)
-          memoryUtils.user = userData
-          this.props.history.replace("/")
-        }else{
-          message.error(result.msg)
-        }
+    form.validateFields(async (error, { username, password }) => {
+      if (!error) {
+        console.log(username,password)
+        // 验证通过
+        this.props.login(username, password );
       } else {
-        message.error()
+        console.log("前台表单验证失败");
       }
     });
   };
   render() {
-    const userData = memoryUtils.user
+    const userData = this.props.user
     if (userData._id) {
       return <Redirect to="/"></Redirect>;
     }
@@ -61,20 +57,21 @@ class Login extends Component {
         </div>
 
         <Form onSubmit={this.handleSubmit} className="login-form login-window">
+          {userData.msg ? <div style={{ color: "red" }}>{userData.msg}</div> : null}
           <h2>用户登录</h2>
           <Form.Item>
             {getFieldDecorate("username", {
               initialValue: "",
               rules: [
-                {require: true,whitespace: true,message: "请输入用户名"},
-                {whitespace:true,message:"用户名不能包含空格"},
+                { require: true, whitespace: true, message: "请输入用户名" },
+                { whitespace: true, message: "用户名不能包含空格" },
                 { min: 4, message: "用户名长度不得小于4位" },
                 { max: 16, message: "用户名长度不得超过16位" },
                 {
                   pattern: /^[a-zA-Z0-9_]+$/,
                   message: "用户名只能包含英文、数字或者是下划线"
                 }
-                  ]
+              ]
             })(
               <Input
                 prefix={
@@ -87,9 +84,7 @@ class Login extends Component {
           <Form.Item>
             {getFieldDecorate("password", {
               initialValue: "",
-              rules: [
-                { validator: this.validatePWD }
-              ]
+              rules: [{ validator: this.validatePWD }]
             })(
               <Input
                 prefix={
@@ -116,4 +111,9 @@ class Login extends Component {
 }
 
 const Wrappedlogin = Form.create()(Login)
-export default Wrappedlogin
+export default connect(
+  state=>({
+    user:state.user
+  }),
+  {login}
+)(Wrappedlogin);
